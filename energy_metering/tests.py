@@ -1,10 +1,6 @@
 from django.test import TestCase
-import requests
 from rest_framework.test import APIClient
-from django.core.management import call_command
-import json
 from energy_metering.models import ConsumedEnergy
-from energy_metering.management.commands.generate_energy_invoices import generate_energy_invoices
 import time
 
 
@@ -29,8 +25,8 @@ class EnergyTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         answer = response.json()
-        token = answer['token']
-        client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+        token = answer['access']
+        client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
 
         # Save consumption from neighbour 1
         response = client.post('/energy/save',
@@ -167,7 +163,6 @@ class EVEnergyTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['status'], 'ok')
 
-
     def test_authorize_user(self):
         """
             Authorize
@@ -194,7 +189,6 @@ class EVEnergyTest(TestCase):
         answer = response.json()
         self.assertEqual(answer['status'], 'nok')
 
-
     def test_cp_status_update(self):
         """
             StatusNotification
@@ -213,7 +207,6 @@ class EVEnergyTest(TestCase):
         answer = response.json()
         self.assertEqual(answer['status'], 'ok')
 
-
     def test_get_messages(self):
         """
             Get messages fot the given CP
@@ -228,4 +221,3 @@ class EVEnergyTest(TestCase):
 
         answer = response.json()
         self.assertEqual(answer['status'], 'ok')
-        print(answer['messages'])

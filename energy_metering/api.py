@@ -47,6 +47,14 @@ def save_energy_action(request):
         return Response({'status': 'nok', 'msg': 'Invalid token'})
 
     if e_type == 'generated':
+        # Look if log already exists
+        generated_log_exists = GeneratedEnergy.objects.filter(
+            community=community_info.community,
+            energy_amount=amount,
+            time=date)
+        if generated_log_exists:
+            return Response({'status': 'duplicated'})
+
         gen_obj = GeneratedEnergy(community=community_info.community,
                                   energy_amount=amount,
                                   time=date,
@@ -65,6 +73,14 @@ def save_energy_action(request):
         if 'neighbour' in sensor_id:
             user_comm_id = sensor_id.split('_')[1]
             user_comm = community_info.community.users.filter(id=user_comm_id).first()
+
+        # Look if log already exists
+        consume_log_exists = ConsumedEnergy.objects.filter(
+            community=community_info.community,
+            energy_amount=amount,
+            time=date)
+        if consume_log_exists:
+            return Response({'status': 'duplicated'})
 
         consume_obj = ConsumedEnergy(community=community_info.community,
                                      energy_amount=amount,
