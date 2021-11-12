@@ -27,6 +27,12 @@ class EnergyInvoiceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ConsumerAgreementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsumerAgreement
+        fields = '__all__'
+
+
 class CPMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = CPMessage

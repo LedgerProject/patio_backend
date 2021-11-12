@@ -6,6 +6,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'generated', api.GeneratedEnergyViewSet)
 router.register(r'consumed', api.ConsumedEnergyViewSet)
+router.register(r'agreements', api.ConsumerAgreementViewSet)
 router.register(r'invoice', api.EnergyInvoiceViewSet)
 router.register(r'transaction', api.EnergyTransactionViewSet)
 

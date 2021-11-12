@@ -112,6 +112,24 @@ class CommunityEnergyInfo(models.Model):
         return "%s" % (self.community.nif)
 
 
+class ConsumerAgreement(models.Model):
+    """
+        Represents an agreement with a consumer where he/she will buy
+        a fixed kWh amount per month.
+    """
+    community = models.ForeignKey(Community,
+                                  on_delete=models.CASCADE,
+                                  related_name="agreements")
+    consumer_name = models.CharField(max_length=200, blank=True,
+                                     null=True, default="")
+    energy_amount = models.DecimalField(decimal_places=6,
+                                        max_digits=20, name="kWh")
+    watt_price = models.DecimalField(decimal_places=6,
+                                     max_digits=20, name="€/kWh")
+
+    def __str__(self):
+        return "%s" % (self.consumer_name)
+
 # Models for OCPP interaction
 
 

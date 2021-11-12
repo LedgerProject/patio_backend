@@ -13,7 +13,8 @@ from comunitaria.utils import check_user_comm_permissions
 from energy_metering.management.commands.generate_energy_invoices import generate_energy_invoices
 from .models import (GeneratedEnergy, ConsumedEnergy, EnergyTransaction,
                      EnergyInvoice, CommunityEnergyInfo, CentralSystem,
-                     ChargePoint, CPConnector, CPMessage, EVTransaction)
+                     ChargePoint, CPConnector, CPMessage, EVTransaction,
+                     ConsumerAgreement)
 
 
 power_unit = 'W'
@@ -218,6 +219,22 @@ class EnergyInvoiceViewSet(viewsets.ReadOnlyModelViewSet):
             return EnergyInvoice.objects.filter(payer__community=usercomm.community)
 
         return EnergyInvoice.objects.filter(payer__id=usercomm_id)
+
+
+class ConsumerAgreementViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+        ConsumerAgreement
+        Query parameter community is expected
+        /energy/agreements/?community=1
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ConsumerAgreementSerializer
+    queryset = ConsumerAgreement.objects.all()
+
+    def get_queryset(self):
+        community_id = self.request.query_params.get('community', None)
+
+        return ConsumerAgreement.objects.filter(community__id=community_id)
 
 
 # API functions for OCPP Charge Point - Central System - Supervecina Interaction
